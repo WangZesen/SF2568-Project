@@ -5,6 +5,8 @@ Parallel algorithm to solve convex hull problem for 2d and 3d
 
 * http://www.cs.hiroshima-u.ac.jp/cs/_media/en/convexhullspdaa09.pdf
 
+![alt text](https://raw.githubusercontent.com/WangZesen/SF2568-Project/master/result_imgs/2d.png)
+
 3d Algorithm Reference (Page 26 - 43)
 
 
