@@ -18,6 +18,7 @@ struct Points {
 	float x, y;
 };
 
+// For sorting positions
 int compare_point(const void *a, const void *b) {
 	if ((*(struct Points *)a).x < (*(struct Points *)b).x) {
 		return 0;
@@ -30,14 +31,17 @@ int compare_point(const void *a, const void *b) {
 	}
 }
 
+// For sorting positions clockwisely
 int compare_index(const void *a, const void *b) {
 	return (*(struct Index *)a).angle > (*(struct Index *)b).angle; 
 }
 
+// Return the distance between two points
 float dist(const struct Points *x, const struct Points *y) {
 	return sqrt(((*x).x - (*y).x) * ((*x).x - (*y).x) + ((*x).y - (*y).y) * ((*x).y - (*y).y));
 }
 
+// Different version of cross product
 float cross_product(const struct Points *point, const struct Index *localPoints, int x, int y, int z) {
 	float x0 = point[localPoints[y].index].x - point[localPoints[x].index].x;
 	float y0 = point[localPoints[y].index].y - point[localPoints[x].index].y;
@@ -511,6 +515,7 @@ int main(int argc, char *argv[]) {
 	int *finalLowerHull;
 
 	if (p == 0) {
+		// Final check for the computed convex hull
 		int lowerNodeCount = 1;
 		finalLowerHull = (int *) malloc(sizeof(int));
 		for (i = 0; i < P; i++) {
@@ -524,7 +529,6 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
-	
 	
 	// Algorithm Ends here
 	MPI_Barrier(MPI_COMM_WORLD);
