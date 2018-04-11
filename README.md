@@ -10,6 +10,6 @@ Parallel algorithm to solve convex hull problem for 2d and 3d
 
 
 * For small cases: https://blog.csdn.net/theArcticOcean/article/details/50646428
-* a https://www.cs.jhu.edu/~misha/Spring16/09.pdf 
+* https://www.cs.jhu.edu/~misha/Spring16/09.pdf 
 
 
