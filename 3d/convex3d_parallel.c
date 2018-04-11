@@ -13,12 +13,14 @@ struct Point {
 	double x, y, z;
 };
 
+// Copy a point
 void copy_point(struct Point *x, const struct Point *other) {
 	x->x = other->x;
 	x->y = other->y;
 	x->z = other->z;
 }
 
+// Return a unit vector
 struct Point unit_vector() {
 	struct Point x;
 	x.x = x.y = x.z = 1;
@@ -34,22 +36,27 @@ struct Point subtract(const struct Point *x, const struct Point *y) {
 	return z;
 }
 
+// return square of a number
 double sqr(double x) {
 	return x * x;
 }
 
+// return the length of a vector
 double dist(const struct Point point) {
 	return sqrt(sqr(point.x) + sqr(point.y) + sqr(point.z));
 }
 
+// return the length of a vector in 2d
 double dist_2d(const struct Point point) {
 	return sqrt(sqr(point.x) + sqr(point.y));
 }
 
+// return dot product of two vectors
 double dot_prod(const struct Point *a, const struct Point *b) {
 	return (a->x * b->x) + (a->y * b->y) + (a->z * b->z);
 }
 
+// return a normalized vector
 struct Point normalize(const struct Point *a) {
 	struct Point b;
 	double len = dist(*a);
@@ -63,6 +70,7 @@ struct Point normalize(const struct Point *a) {
 	return b;
 }
 
+// return the dot product of two vector
 struct Point cross_prod(const struct Point *a, const struct Point *b) {
 	struct Point z;
 	z.x = a->y * b->z - a->z * b->y;
@@ -71,11 +79,13 @@ struct Point cross_prod(const struct Point *a, const struct Point *b) {
 	return z;
 }
 
+// return the dot product of two vectors, and the second vector is normalized
 double normal_dot_prod(const struct Point *a, const struct Point *b) {
 	struct Point normalB = normalize(b);
 	return dot_prod(a, &normalB);
 }
 
+// return the dot product of two vectors in 2d, and the second vector is normalized
 double normal_dot_prod_2d(const struct Point *a, const struct Point *b, const struct Point *c) {
 	struct Point supp1 = subtract(a, b);
 	struct Point supp2 = subtract(b, c);
@@ -89,12 +99,14 @@ double normal_dot_prod_2d(const struct Point *a, const struct Point *b, const st
 	return supp1.x * supp2.x + supp1.y * supp2.y;
 }
 
+// return the cross product of two vectors in 2d
 double cross_prod_2d(const struct Point *a, const struct Point *b, const struct Point *c) {
 	struct Point supp1 = subtract(a, b);
 	struct Point supp2 = subtract(b, c);
 	return supp1.x * supp2.y - supp1.y * supp2.x;
 }
 
+// return true if three points are collinear
 int on_line(const struct Point *a, const struct Point *b, const struct Point *c) {
 	struct Point supp1 = subtract(a, b);
 	struct Point supp2 = subtract(a, c);
@@ -109,20 +121,7 @@ int on_line(const struct Point *a, const struct Point *b, const struct Point *c)
 	}
 }
 
-void swap_point(struct Point *a, struct Point *b) {
-	double tmp = a->x;
-	a->x = b->x;
-	b->x = tmp;
-	
-	tmp = a->y;
-	a->y = b->y;
-	b->y = tmp;
-	
-	tmp = a->z;
-	a->z = b->z;
-	b->z = tmp;
-}
-
+// used for sorting the positions of points
 int compare_point(const void *a, const void *b) {
 	if ( ((struct Point *) a)->x > ((struct Point *) b)->x ) {
 		return 1;
@@ -145,6 +144,7 @@ struct Edge {
 	int id, dst, bound;
 };
 
+// add an edge endding with <id> and linking to <dst>
 void construct_edge(struct Edge *start, int dst, int id) {
 	struct Edge *newEdge = (struct Edge *) malloc(sizeof(struct Edge));
 	newEdge->next = start->next;
@@ -154,6 +154,7 @@ void construct_edge(struct Edge *start, int dst, int id) {
 	start->next = newEdge;
 }
 
+// return the id of the edge endding with <id>
 int find_edge_id(const struct Edge *start, int dst) {
 	struct Edge *pivot = start->next;
 	while (pivot != NULL) {
@@ -165,6 +166,7 @@ int find_edge_id(const struct Edge *start, int dst) {
 	return -1;
 }
 
+// return whether an edge is a bound edge
 int find_edge_bound(const struct Edge *start, int dst) {
 	struct Edge *pivot = start->next;
 	while (pivot != NULL) {
@@ -176,6 +178,7 @@ int find_edge_bound(const struct Edge *start, int dst) {
 	return -1;
 }
 
+// set bound property of the edge linking to <dst> as <bound>
 int set_edge_bound(const struct Edge *start, int dst, int bound) {
 	struct Edge *pivot = start->next;
 	while (pivot != NULL) {
@@ -189,6 +192,7 @@ int set_edge_bound(const struct Edge *start, int dst, int bound) {
 	return -1;
 }
 
+// change id property of the edge linking to <dst> as <id>
 void edit_edge_id(struct Edge *start, int dst, int id) {
 	struct Edge *pivot = start->next;
 	while (pivot != NULL) {
@@ -201,6 +205,7 @@ void edit_edge_id(struct Edge *start, int dst, int id) {
 	printf("Edit Failed\n");
 }
 
+// change id property and dst property of the edge linking to <dst> as <id> and <newDst>
 void edit_edge_dst_id(struct Edge *start, int dst, int newDst, int id) {
 	struct Edge *pivot = start->next;
 	while (pivot != NULL) {
@@ -221,6 +226,7 @@ struct Facet {
 	int valid; // whether facet belongs to convex hull
 };
 
+// return a facet
 struct Facet construct_facet(int a, int b, int c, int id, int valid) {
 	struct Facet facet;
 	facet.a = a;
@@ -231,6 +237,7 @@ struct Facet construct_facet(int a, int b, int c, int id, int valid) {
 	return facet;
 }
 
+// change the property of a facet
 void edit_facet(struct Facet *facet, int a, int b, int c, int id, int valid) {
 	facet->a = a;
 	facet->b = b;
@@ -239,6 +246,7 @@ void edit_facet(struct Facet *facet, int a, int b, int c, int id, int valid) {
 	facet->valid = valid;
 }
 
+// copy a facet
 void copy_facet(struct Facet *facet, const struct Facet *other) {
 	facet->a = other->a;
 	facet->b = other->b;
@@ -247,6 +255,7 @@ void copy_facet(struct Facet *facet, const struct Facet *other) {
 	facet->valid = other->valid;
 }
 
+// return the normal vector of a facet
 struct Point facet_normal(const struct Point *points, const struct Facet *facet) {
 	struct Point supp1 = subtract(points + facet->b, points + facet->a);
 	struct Point supp2 = subtract(points + facet->c, points + facet->a);
@@ -254,6 +263,7 @@ struct Point facet_normal(const struct Point *points, const struct Facet *facet)
 	return normal;
 }
 
+// return the normal vector of a temporary facet
 struct Point tem_facet_normal(const struct Point *a, const struct Point *b, const struct Point *c) {
 	struct Point supp1 = subtract(b, a);
 	struct Point supp2 = subtract(c, a);
@@ -261,6 +271,7 @@ struct Point tem_facet_normal(const struct Point *a, const struct Point *b, cons
 	return normal;
 }
 
+// return true if <points[index]> is on facet <facet>
 int on_facet(const struct Point *points, const struct Facet *facet, int index) {
 
 	struct Point supp3 = subtract(points + index, points + facet->a);
@@ -273,6 +284,7 @@ int on_facet(const struct Point *points, const struct Facet *facet, int index) {
 	}
 }
 
+// return true if <points[index]> is above facet <facet>
 int above_facet(const struct Point *points, const struct Facet *facet, int index) {
 	struct Point supp3 = subtract(points + index, points + facet->a);
 	struct Point normal = facet_normal(points, facet);
@@ -284,12 +296,14 @@ int above_facet(const struct Point *points, const struct Facet *facet, int index
 	}
 }
 
+// construct 3 edges for facet <facet>
 void construct_edges(const struct Point *points, struct Edge *edges, struct Facet *facet) {
 	construct_edge(edges + facet->a, facet->b, facet->id);
 	construct_edge(edges + facet->b, facet->c, facet->id);
 	construct_edge(edges + facet->c, facet->a, facet->id);
 }
 
+// change the valid property of some facets that can be reached by <points[index]>
 void change_facet(const struct Point *points, struct Edge *edges, struct Facet *facets, struct Facet *facet, int *cnt, int index) {
 	// delete current facet	
 	facet->valid = 0; 
@@ -381,6 +395,7 @@ void generate(struct Point *points, int N, int shape) {
 	}
 }
 
+// Print the position of <points[index]>
 void print_a_point(FILE *f, const struct Point *points, int index) {
 	fprintf(f, "%.2f, %.2f, %.2f, ", points[index].x, points[index].y, points[index].z);
 }
@@ -397,6 +412,7 @@ void print_positions(const struct Point *points, int N) {
 	fclose(f);
 }
 
+// Print the positions of facets
 void print_facets_write(struct Point *points, struct Facet *facets, int startCnt, int cnt) {
 	int i;
 	FILE *f;
@@ -413,6 +429,7 @@ void print_facets_write(struct Point *points, struct Facet *facets, int startCnt
 	fclose(f);
 }
 
+// Print the positions of facets
 void print_facets_append(struct Point *points, struct Facet *facets, int startCnt, int cnt) {
 	int i;
 	FILE *f;
@@ -429,12 +446,14 @@ void print_facets_append(struct Point *points, struct Facet *facets, int startCn
 	fclose(f);
 }
 
+// Print the positions of 2d convex hull (for test)
 void print_chs_write() {
 	FILE *f;
 	f = fopen("chs.txt", "w");
 	fclose(f);
 }
 
+// Print the positions of 2d convex hull (for test)
 void print_chs_append(const struct Point *points, int *ch) {
 	int i;
 	FILE *f;
@@ -448,6 +467,7 @@ void print_chs_append(const struct Point *points, int *ch) {
 	fclose(f);
 }
 
+// Construct a convex hull from scratch
 void construct(struct Point *points, struct Edge *edges, struct Facet *facets, int l, int r, int *cnt) {
 	int i, j, startCnt;
 	startCnt = *cnt;
@@ -553,6 +573,8 @@ void construct(struct Point *points, struct Edge *edges, struct Facet *facets, i
 	}
 }
 
+
+// Construct the 2d convex hull according to the projection
 int* convex_hull_2d(const struct Point *points, const struct Edge *edges, const struct Facet *facets, int fl, int fr) {
 	int i;
 	// Find Point with Smallest Y
@@ -612,6 +634,7 @@ int* convex_hull_2d(const struct Point *points, const struct Edge *edges, const 
 	return ch;
 }
 
+// Find the most left point of right convex hull
 int find_left_most(const struct Point *points, int *ch) {
 	int i = 0;
 	int mostNode = 0;
@@ -624,6 +647,7 @@ int find_left_most(const struct Point *points, int *ch) {
 	return mostNode;
 }
 
+// Find the most right point of left convex hull
 int find_right_most(const struct Point *points, int *ch) {
 	int i = 0;
 	int mostNode = 0;
@@ -636,6 +660,7 @@ int find_right_most(const struct Point *points, int *ch) {
 	return mostNode;
 }
 
+// Try to rotate the pivot on the left convex hull clockwisely
 int clockwise_rotate(const struct Point *points, int *ch, int *pivot, int index) {
 	int next = *pivot - 1;
 	if (next < 0) {
@@ -651,6 +676,7 @@ int clockwise_rotate(const struct Point *points, int *ch, int *pivot, int index)
 	return 0;
 }
 
+// Try to rotate the pivot on the right convex hull counter-clockwisely
 int counter_clockwise_rotate(const struct Point *points, int *ch, int *pivot, int index) {
 	int next = *pivot + 1;
 	if (ch[next] == ch[0]) {
@@ -663,6 +689,7 @@ int counter_clockwise_rotate(const struct Point *points, int *ch, int *pivot, in
 	return 0;
 }
 
+// Find the next point of the common fillet
 int find_best_fillet(const struct Point *point, const struct Edge *edges, const struct Facet *facets, const struct Point *normal, int index1, int index2) {
 	double maxDotProd = -10.0;
 	double minLength = -10.0;
@@ -698,7 +725,6 @@ int find_best_fillet(const struct Point *point, const struct Edge *edges, const 
 	}
 	return maxIndex;
 }
-
 
 // Use Flood-Fill to Delete Internal Facets
 void delete_facets(const struct Point *points, const struct Edge *edges, struct Facet *facets, int startID, int size) {
@@ -793,14 +819,7 @@ int merge(const struct Point *points, struct Edge *edges, struct Facet *facets, 
 	while (clockwise_rotate(points, ch1, &pivot1, ch2[pivot2]) || counter_clockwise_rotate(points, ch2, &pivot2, ch1[pivot1])) {
 	}
 	
-	// print_chs_append(points, ch1);
-	// print_chs_append(points, ch2);
-	
-	// print_a_point(stdout, points, ch1[pivot1]);
-	// printf("\n");
-	// print_a_point(stdout, points, ch2[pivot2]);
-	// printf("\n");
-	
+	// Find fillets connecting two convex hull
 	int suppNode1 = ch1[pivot1];
 	int suppNode2 = ch2[pivot2];
 	pivot1 = ch1[pivot1];
@@ -835,11 +854,11 @@ int merge(const struct Point *points, struct Edge *edges, struct Facet *facets, 
 
 	} while ((pivot1 != suppNode1) || (pivot2 != suppNode2));
 	
-	// Flood-Fill
+	// Use flood-fill to delete useless facets in between
 	delete_facets(points, edges, facets, start1, fr1 - fl1);
 	delete_facets(points, edges, facets, start2, fr2 - fl2);
 	
-	// Construct New Convex Hull
+	// Construct new convex hull
 	for (i = 0; i < filletCount; i++) {
 		int newIndex = filletList[i];
 		if (newIndex >= 0) {
@@ -913,6 +932,7 @@ int merge(const struct Point *points, struct Edge *edges, struct Facet *facets, 
 	return cnt;
 }
 
+// Construct the convex hull and return the maximum id of valid facets
 int split_and_conquer(struct Point *points, struct Edge *edges, struct Facet *facets, int l, int r) {
 	if (r - l < 200) {
 		int facetCount = l * 6;
@@ -997,11 +1017,13 @@ int main(int argc, char *argv[]) {
 				MPI_Recv(nodeC, end - start, MPI_INT, dst, 5, MPI_COMM_WORLD, &status);
 				MPI_Recv(valid, end - start, MPI_INT, dst, 6, MPI_COMM_WORLD, &status);
 				
+				// Update edges received from other processors
 				for (j = start; j < end; j++) {
 					edit_facet(facets + j, nodeA[j - start], nodeB[j - start], nodeC[j - start], j, valid[j - start]);
 					construct_edges(points, edges, facets + j);
 				}
-
+				
+				// Merge the receivde convex hull with the current one
 				cnt = merge(points, edges, facets, n * 6, cnt, start, end);
 
 				free(nodeA);
@@ -1023,11 +1045,11 @@ int main(int argc, char *argv[]) {
 					nodeC[j - start] = facets[j].c;
 					valid[j - start] = facets[j].valid;
 				}
+				// Send information of current convex hull to other processor
 				MPI_Send(nodeA, cnt - start, MPI_INT, dst, 3, MPI_COMM_WORLD);
 				MPI_Send(nodeB, cnt - start, MPI_INT, dst, 4, MPI_COMM_WORLD);
 				MPI_Send(nodeC, cnt - start, MPI_INT, dst, 5, MPI_COMM_WORLD);
 				MPI_Send(valid, cnt - start, MPI_INT, dst, 6, MPI_COMM_WORLD);
-
 
 				free(nodeA);
 				free(nodeB);
@@ -1038,6 +1060,7 @@ int main(int argc, char *argv[]) {
 		flip += flip;
 	}
 	
+	// Algorithm ends here
 	MPI_Barrier(MPI_COMM_WORLD);
 	if (p == 0) {
 		double endTime = MPI_Wtime();
