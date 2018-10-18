@@ -1,7 +1,7 @@
 # SF2568-Project
 Parallel algorithm to solve convex hull problem for 2d and 3d
 
-Report Link: https://www.sharelatex.com/read/nbdmmfzrzhzq
+The [link](Parallel_Project_Report.pdf) for technical report.
 
 2d Algorithm Reference
 
